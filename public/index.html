@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+  <!-- 开启使用ie兼容模式 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="keywords" content="爱乐孕,试管,黄体酮,不孕不育,论坛,社区,电子病历,建档,怀孕">
+  <meta name="description"
+    content="爱乐孕是基于电子病历的不孕不育社区论坛，为不孕不育患者提供服务，患者可以就移植、试管、取卵、促排、注射黄体酮等进行讨论。爱乐孕不孕不育社区论坛帮助众多患者圆了父母梦。">
+  <!-- 禁止手机号长按呼出  忽略邮箱状态-->
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <!-- 是否开启全屏 -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <!-- 标题头部的颜色  必须配合全屏才生效-->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="stylesheet" href="./static/impl/css/swiper.min.css">
+  <link rel="stylesheet" href="./static/impl/css/minirest.css" />
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+
+  <!-- <title><%= htmlWebpackPlugin.options.title %></title> -->
+  <title>爱乐孕</title>
+</head>
+
+<body>
+  <noscript>
+    <strong>
+      We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+      Please enable it to continue.
+    </strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- 引入组件库 -->
+  <script>
+    //(function () { var script = document.createElement('script'); script.src="https://eruda.liriliri.io/eruda.min.js"; document.body.appendChild(script); script.onload = function () { eruda.init() } })();
+  </script>
+  <script> (function(){ var str= navigator.userAgent.toLowerCase(); var ver=str.match(/cpu iphone os (.*?) like mac os/);     if (parseInt(ver)<=9) { alert("你当前的Ios系统版本为："+ver[1].replace(/_/g,".")); var str = "你的系统版本太low了,已经和时代脱轨了 :("; var str2 = "请将系统升级到10.0.0以上"; document.writeln( "<pre style='text-align:center;color:#fff;background-color:#0cc; height:100%;border:0;position:fixed;top:0;left:0;width:100%;z-index:1234'>" + "<h2 style='padding-top:200px;margin:0'><strong>" + str + "<br/></strong></h2><h1>" + str2 + "</h1><h2 style='margin:0'></h2></pre>"); document.execCommand("Stop") } })(); (function (window) { var theUA = window.navigator.userAgent.toLowerCase(); if ((theUA.match(/msie\s\d+/) && theUA.match(/msie\s\d+/)[0]) || (theUA.match(/trident\s?\d+/) && theUA.match( /trident\s?\d+/)[0])) { var ieVersion = theUA.match(/msie\s\d+/)[0].match(/\d+/)[0] || theUA.match(/trident\s?\d+/)[0]; if (ieVersion <= 9 ) { var str = "你的系统版本太low了,已经和时代脱轨了 :("; var str2 = "请升级系统"; document.writeln( "<pre style='text-align:center;color:#fff;background-color:#0cc; height:100%;border:0;position:fixed;top:0;left:0;width:100%;z-index:1234'>" + "<h2 style='padding-top:200px;margin:0'><strong>" + str + "<br/></strong></h2><h1>" + str2 + "</h1><h2 style='margin:0'><strong>如果你的使用最新系统还不能访问,请更新app版本<br/></strong></h2></pre>"); document.execCommand("Stop") } } })(window);; </script>
+  <script src="./static/impl/js/vue.min.js"></script>
+  <script src="./static/impl/js/vue-router.min.js"></script>
+  <script src="./static/impl/js/vuex.min.js"></script>
+  <script src="./static/impl/js/axios.min.js"></script>
+  <script src="./static/impl/js/swiper.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/echarts@4.1.0/dist/echarts.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/vue-echarts@4.0.2"></script>
+  <script src="//ileyun.ivfcn.com/tools/static/js/jquery.min.js"></script>
+  <script src="//ileyun.ivfcn.com/tools/static/js/clipboard.min.js"></script>
+  <div style="display:none">
+    <script defer>
+      var WINDOW_ONE_TIME_BASE_API = "https://www.baidu.com/SA3/";
+    </script>
+    <script type="text/javascript" src="//s19.cnzz.com/z_stat.php?id=1273117909&web_id=1273117909"></script>
+  </div>
+  <!-- built files will be auto injected -->
+</body>
+
+</html>
