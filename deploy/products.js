@@ -47,11 +47,11 @@ const SERVER_LIST = [
     id: 0,
     name: 'A-测试环境',
     domain: '',// 域名
-    host: '120.24.61.38',// ip
+    host: '120.24.61.318',// ip
     assetsRoot: './dist',
     port: 22,// 端口
     username: 'root', // 登录服务器的账号
-    password: 'hc2017@83754648',// 登录服务器的账号
+    password: 'root',// 登录服务器的账号
     path: '/home/web/tools/'// 发布至静态服务器的项目路径
   },
   {// 此命令（发布Vue3.0测试版）
@@ -62,7 +62,7 @@ const SERVER_LIST = [
     assetsRoot: './dist',
     port: 22,// 端口
     username: 'root', // 登录服务器的账号
-    password: 'Lsk19950726',// 登录服务器的账号
+    password: 'root',// 登录服务器的账号
     path: '/var/www/html/web/'// 发布至静态服务器的项目路径
   },
 ];
