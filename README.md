@@ -33,10 +33,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 #一键发布到服务器方法：
 `
-npm run deploy:dev  // 此命令（发布到测试版）
+npm run deploy:test  // 此命令（发布到测试版）
 以下皆为正式环境。
 npm run deploy:prod // 此命令（发布到公共版）
-npm run deploy:cust // 此命令（发布到C端正式版）
 `
 
 /drugActivityDetails/{id}   药品详情;
