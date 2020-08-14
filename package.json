@@ -4,23 +4,19 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --mode dev",
+    "test": "vue-cli-service serve --mode test",
     "build": "vue-cli-service build --mode prod",
     "lint": "vue-cli-service lint",
-    "deploy:prod": "npm run build && cross-env NODE_ENV=prod node ./deploy"
+    "deploy:prod": "npm run build && cross-env NODE_ENV=prod node ./deploy",
+    "deploy:test": "npm run build && cross-env NODE_ENV=test node ./deploy",
+    "analyz": "cross-env NODE_ENV=prod npm_config_report=true npm run build"
   },
   "dependencies": {
-    "amfe-flexible": "^2.2.1",
     "core-js": "^3.6.5",
-    "echarts": "^4.8.0",
-    "echarts-gl": "^1.1.1",
     "js-cookie": "^2.2.1",
-    "swiper": "^5.4.5",
-    "vant": "^2.8.5",
-    "vue": "^2.6.11",
-    "vue-awesome-swiper": "^4.1.1",
-    "vue-echarts": "^5.0.0-beta.0",
-    "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vant": "^2.9.0",
+    "vue": "^2.6.10",
+    "vue-qr": "^2.2.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.4.0",
@@ -43,6 +39,6 @@
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.10"
   }
 }

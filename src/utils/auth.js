@@ -4,29 +4,36 @@ const TokenKey = 'token';
 const UnitId   = 'unitId';
 const UserInfo = 'userInfo';
 const OpenId   = 'openId';
-const Channel  = "B-Channel";
-const BASE_URL = 'WINDOW_ONE_TIME_BASE_URL';
-
-
-// 保留测试地址
-export function getBaseUrl() {
-   return Cookies.get(BASE_URL);
+const Channel  = "channel";
+const AppType  = 'isApp';
+const facilityType = 'facilityType';
+//承载环境
+export function getAppType() {
+   return sessionStorage.getItem(AppType) || '';
 }
 
-export function setBaseUrl(data = '') {
-   return Cookies.set(BASE_URL, data);
+export function setAppType(data = '') {
+   return sessionStorage.setItem(AppType, data);
 }
 
-export function removeBaseUrl() {
-   return Cookies.get(BASE_URL);
+// 功能区载体标识
+export function getFacilityType() {
+    return sessionStorage.getItem(facilityType) || '';
+}
+ 
+export function setFacilityType(data = 'h5') {
+    const u = navigator.userAgent.toLowerCase();
+    if (u.match(/MicroMessenger/i) == "micromessenger") data = 'web';
+    return sessionStorage.setItem(facilityType, data);
 }
 
 // 用户标示
 export function getToken() {
-   return Cookies.get(TokenKey);
+   return Cookies.get(TokenKey) || '';
 }
 
 export function setToken(token = '') {
+    removeToken();
     return Cookies.set(TokenKey, token);
 }
 
@@ -41,6 +48,7 @@ export function getUserInfo() {
 }
 
 export function setUserInfo(data = '') {
+    removeUserInfo();
     return sessionStorage.setItem(UserInfo, JSON.stringify(data));
 }
 
@@ -55,6 +63,7 @@ export function getUnitId() {
 }
 
 export function setUnitId(val) {
+    removeUnitId();
     return Cookies.set(UnitId, val);
 }
 
@@ -69,6 +78,7 @@ export function getOpenId() {
 }
 
 export function setOpenId(val = '') {
+    removeOpenId();
     return Cookies.set(OpenId, val);
 }
 
@@ -83,6 +93,7 @@ export function getChannel() {
 }
 
 export function setChannel(val = '') {
+    removeChannel();
     return Cookies.set(Channel, val);
 }
 

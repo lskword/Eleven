@@ -12,7 +12,7 @@ const filePath = "./" + (new Date()).getTime() + server.assetsRoot.replace('./',
 
 ssh2.on('ready', () => {
     console.log(chalk.green('连接服务成功...'));
-    ssh2.exec("rm -rf " + server.path + '/static', (err,stream)=> {
+    ssh2.exec(`rm -rf ${server.path}/css ${server.path}/img ${server.path}/js` , (err,stream)=> {
         console.log(chalk.green('正在删除缓存历史文件...\n'));
         if (err) {console.log(chalk.red('删除失败.\n')); throw err;}
         stream.on("close", ()=>{
@@ -44,7 +44,7 @@ function uploadFile() {
       function (err) {
         spinner.stop();
         if (err) {
-          console.log(chalk.red('发布失败.\n'));
+          console.log(chalk.red('发布失败.\n'), err);
           throw err;
         } else {
           console.log(chalk.green('Success! 成功发布到' + server.name + '服务器! \n'));

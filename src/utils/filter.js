@@ -1,5 +1,7 @@
 // 过滤器注册基地
-
+/* eslint-disable */
+const isServer = Vue.prototype.$isServer;
+const ieVersion = isServer ? 0 : Number(document.documentMode);
 export function timeAgo(time) {
   const between = Date.now() / 1000 - Number(time)
   if (between < 3600) {
@@ -10,6 +12,146 @@ export function timeAgo(time) {
     return pluralize(~~(between / 86400), ' day')
   }
 }
+
+export function toPercent(point){
+  if (point==0) {
+      return 0;
+  }
+  var str=Number(point*100).toFixed();
+  str+="%";
+  return str;
+}
+/* istanbul ignore next */
+export function addClass(el, cls) {
+  if (!el) return;
+  var curClass = el.className;
+  var classes = (cls || '').split(' ');
+
+  for (var i = 0, j = classes.length; i < j; i++) {
+    var clsName = classes[i];
+    if (!clsName) continue;
+
+    if (el.classList) {
+      el.classList.add(clsName);
+    } else if (!hasClass(el, clsName)) {
+      curClass += ' ' + clsName;
+    }
+  }
+  if (!el.classList) {
+    el.className = curClass;
+  }
+};
+
+/* istanbul ignore next */
+export function removeClass(el, cls) {
+  if (!el || !cls) return;
+  var classes = cls.split(' ');
+  var curClass = ' ' + el.className + ' ';
+
+  for (var i = 0, j = classes.length; i < j; i++) {
+    var clsName = classes[i];
+    if (!clsName) continue;
+
+    if (el.classList) {
+      el.classList.remove(clsName);
+    } else if (hasClass(el, clsName)) {
+      curClass = curClass.replace(' ' + clsName + ' ', ' ');
+    }
+  }
+  if (!el.classList) {
+    el.className = trim(curClass);
+  }
+};
+export  function orderType(value) {
+  switch (value) {
+    case 0:
+      return '待支付';
+    case 7:
+      return '已取消';
+    case 8:
+      return '已完成';
+    case 9:
+      return '接诊中';
+    case 10:
+      return '待接诊';
+    default:
+      return '';
+  }
+}
+
+
+export const getStyle = ieVersion < 9 ? function(element, styleName) {
+  if (isServer) return;
+  if (!element || !styleName) return null;
+  styleName = camelCase(styleName);
+  if (styleName === 'float') {
+    styleName = 'styleFloat';
+  }
+  try {
+    switch (styleName) {
+      case 'opacity':
+        try {
+          return element.filters.item('alpha').opacity / 100;
+        } catch (e) {
+          return 1.0;
+        }
+      default:
+        return (element.style[styleName] || element.currentStyle ? element.currentStyle[styleName] : null);
+    }
+  } catch (e) {
+    return element.style[styleName];
+  }
+} : function(element, styleName) {
+  if (isServer) return;
+  if (!element || !styleName) return null;
+  styleName = camelCase(styleName);
+  if (styleName === 'float') {
+    styleName = 'cssFloat';
+  }
+  try {
+    var computed = document.defaultView.getComputedStyle(element, '');
+    return element.style[styleName] || computed ? computed[styleName] : null;
+  } catch (e) {
+    return element.style[styleName];
+  }
+};
+
+// 合并
+export function merge(target) {
+  for (let i = 1, j = arguments.length; i < j; i++) {
+    let source = arguments[i] || {};
+    for (let prop in source) {
+      if (source.hasOwnProperty(prop)) {
+        let value = source[prop];
+        if (value !== undefined) {
+          target[prop] = value;
+        }
+      }
+    }
+  }
+  return target;
+};
+
+// don't delete  
+export function afterLeave(instance, callback, speed = 300, once = false) {
+  if (!instance || !callback) throw new Error('instance & callback is required');
+  let called = false;
+  const afterLeaveCallback = function() {
+    if (called) return;
+    called = true;
+    if (callback) {
+      callback.apply(null, arguments);
+    }
+  };
+  if (once) {
+    instance.$once('after-leave', afterLeaveCallback);
+  } else {
+    instance.$on('after-leave', afterLeaveCallback);
+  }
+  setTimeout(() => {
+    afterLeaveCallback();
+  }, speed + 100);
+};
 
 /* 数字 格式化*/
 export function numberFormatter(num, digits) {
@@ -64,12 +206,6 @@ export function toThousandslsFilter(num) {
  * @returns
  */
 export function getWeek(dateString) {
-  function isNull(object) {
-    if (object == null || typeof object == "undefined") {
-      return true;
-    }
-    return false;
-  };
   var date;
   if (isNull(dateString)) {
     date = new Date();
@@ -82,93 +218,59 @@ export function getWeek(dateString) {
   return "星期" + "日一二三四五六".charAt(date.getDay());
 }
 
+/**
+ *是否为空
+ *
+ * @export
+ * @param {*} dateString
+ * @returns
+ */
+export function isNull(object) {
+  if (object == null || typeof object == "undefined") {
+    return true;
+  }
+  return false;
+}
 
 /**
  * 苹果安卓交互公用方法
  * @param {*} data 方法交互传递的参数 
  * @param {*} funName 方法名 str类型
  */
-export function iosOrAndFun({
-  data = null,
-  funName
-}) {
+export function iosOrAndFun({data = null,funName}) {
 
   var u = navigator.userAgent;
   var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
   var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-  var str = '';
-  data = JSON.stringify(data)
-  if (isAndroid) {
-    str = nativeMethod[funName](data);
-  } else if (isiOS) {
-    str = window[funName](data);
-  } else {
-    console.error('不是苹果也不是安卓机型');
+  data = JSON.stringify(data);
+  try {
+    if (isAndroid) {
+      nativeMethod[funName](data);
+    } else if (isiOS) {
+      window.webkit.messageHandlers[funName](data);
+    } else {
+      console.warn('不是苹果也不是安卓机型');
+    }
+  } catch (error) {
+    console.warn(`--未检测到App交互方法：${funName}, 【isAndroid】：${isAndroid}, 【isiOS】：${isiOS}`);
+    throw Error(`--App交互方法：${funName}`);
   }
-  return str;
-}
 
-/**
- * 苹果安卓交互公用方法
- * @param {*} data 方法交互传递的参数 Array类型   
- * @param {*} funName 方法名 str类型
- */
-export function iosOrAndFun_wy({
-  data,
-  funName
-}) {
-  data = data || '';
-  var u = navigator.userAgent;
-  var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
-  var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-  var str = ''
-  if (isAndroid) {
-    str = nativeMethod[funName](...data)
-  } else if (isiOS) {
-    str = window[funName](...data)
-  } else {
-    console.error('不是苹果也不是安卓机型');
-  }
-  return str
 }
 
 
-
-// ios安卓样式兼容处理   之所以抽离出来  是因为避免重复添加调用
-export function iosOrAndStyle({
-  data,
-  funName
-}) {
-  data = data || {};
-  var u = navigator.userAgent;
-  var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
-  var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-
-  if (isAndroid) {
-    return true
-  } else if (isiOS) {
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    style.id = 'ios'
-    style.innerHTML = "  * { -webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-overflow-scrolling: touch;}";
-    document.getElementsByTagName('HEAD').item(0).appendChild(style);
-    return true
-  } else {
-    return false
-    console.error('不是苹果也不是安卓机型');
-  }
-}
 // 日期格式化
-export function formatDate(date, fmt, text) {
-  // console.log(date, a.getMonth());
-  fmt = fmt || 'yyyy-MM-dd hh:mm:ss'
+export function formatDate(date = '', fmt, text) {
+  date = new Date(date.replace(/-/g, '/'));
+  fmt = fmt || 'yyyy-MM-dd hh:mm:ss';
   if (!date) {
-    return text || ''
+    return text || '';
   }
 
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
+
   let o = {
     'M+': date.getMonth() + 1,
     'd+': date.getDate(),
@@ -178,16 +280,17 @@ export function formatDate(date, fmt, text) {
   }
   for (let k in o) {
     if (new RegExp(`(${k})`).test(fmt)) {
-      let str = o[k] + ''
+      let str = o[k] + '';
       fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? str : padLeftZero(str))
     }
   }
-  return fmt
+  return fmt;
 }
 
 function padLeftZero(str) {
-  return ('00' + str).substr(str.length)
+  return ('00' + str).substr(str.length);
 }
+
 // 将名字第二个字变成星号
 export function protectionName(name, num) {
   return [...name]
@@ -203,17 +306,17 @@ export function protectionName(name, num) {
 export function DigitalHiding(str) {
   var t = '';
   if (!str) {
-    return '暂未认证'
+    return '暂未认证';
   }
   str = str.toString();
   if (str.length <= 7) {
-    return '长度低于7位!'
+    return '长度低于7位!';
   }
   for (let i = 0; i < str.length - 7; i++) {
-    t += '*'
+    t += '*';
   }
-  var newStr = str.substr(0, 3) + t + str.substr(-4)
-  return newStr
+  var newStr = str.substr(0, 3) + t + str.substr(-4);
+  return newStr;
 }
 
 // 性别格式化
@@ -248,9 +351,7 @@ export function dataURLtoFile(urlData) { //将base64转换为文件
  * @export
  * @param {*} {result}
  */
-export function imgBase64({
-  result
-}) {
+export function imgBase64({result}) {
   var _this = this;
   var formData = new FormData();
   var file = e.target.files[0];
@@ -306,8 +407,8 @@ export function imgBase64({
  */
 export function getRemainderTime(startTime) {
   var s1 = new Date(startTime.replace(/-/g, "/")),
-    s2 = new Date(),
-    runTime = parseInt((s2.getTime() - s1.getTime()) / 1000);
+      s2 = new Date(),
+      runTime = parseInt((s2.getTime() - s1.getTime()) / 1000);
   var year = Math.floor(runTime / 86400 / 365);
   runTime = runTime % (86400 * 365);
   var month = Math.floor(runTime / 86400 / 30);
@@ -320,38 +421,14 @@ export function getRemainderTime(startTime) {
   runTime = runTime % 60;
   var second = runTime;
   // console.log(year,month,day,hour,minute,second);
-  var titleName = ['年', "月", "天", '小时', "分钟"]
-  var arr = [year, month, day, hour, minute]
+  var titleName = ['年', "月", "天", '小时', "分钟"];
+  var arr = [year, month, day, hour, minute];
   for (let index = 0; index < arr.length; index++) {
     const element = arr[index];
     if (element && element !== 0) {
       if (index === 4 && element <= 5) return "刚刚";
       return element + titleName[index] + '前';
     }
-  }
-}
-/**
- * 
- * @param {订单类型} type 
- */
-export function orderType(type) {
-  switch (type) {
-    case 1:
-      return "充值"
-    case 2:
-      return "缴费"
-    case 3:
-      return "挂号"
-    case 4:
-      return "冷冻续费"
-    case 5:
-      return "在线咨询"
-    case 6:
-      return "聊天咨询"
-    case 7:
-      return "视频咨询"
-    default:
-      return ''
   }
 }
 /**
@@ -376,31 +453,18 @@ export function paymentStatus(val) {
 
   switch (val) {
     case 0:
-      return '未支付'
+      return '未支付';
     case 1:
-      return '支付成功'
+      return '支付成功';
     case 2:
-      return '已退款'
+      return '已退款';
     case 3:
-      return '已部分支付'
+      return '已部分支付';
     case 4:
-      return '以部分退款'
+      return '以部分退款';
     default:
-      return '支付超时'
+      return '支付超时';
   }
-  // if( this.orderData.paymentStatus == 0 ){
-  //   return "正在支付中..."
-  // }else if( this.orderData.paymentStatus == 1 ){
-  //   return "支付成功"
-  // }else if( this.orderData.paymentStatus == 2 ){
-  //   return "已退款"
-  // }else if( this.orderData.paymentStatus == 3 ){
-  //   return "已部分支付"
-  // }else if( this.orderData.paymentStatus == 4 ){
-  //   return "以部分退款"
-  // }else{
-  //   return "支付超时"
-  // }
 }
 
 // 月份数字转汉子文本
@@ -427,42 +491,13 @@ export function numChangeText(val) {
   }
 }
 
-// 
-/**
- * 避免高德地图在每一个页面上都加载浪费资源（优化）
- */
-export function MapLoader() {
-  return new Promise((resolve, reject) => {
-    if (window.AMap) {
-      resolve(window.AMap)
-    } else {
-      var script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.defer = true
-      script.src = 'https://webapi.amap.com/maps?v=1.4.14&key=e96dc369c17de420f604bf3d0846673b'
-      script.onerror = reject
-      document.head.appendChild(script)
-    }
-    window.initAMap = () => {
-      resolve(window.AMap)
-    }
-  })
-}
 
 /**
- * @description: 文本空过滤
+ * @description: 检测文本是否为空
  * @param {type} 
  * @return: 
  */
-export function textRender(value) {
-  if (value == null || value == undefined || value === "" || value == "null" || value == 'undefined') {
-    return '-';
-  } else {
-    return value;
-  }
-}
-
-
+export var isEmpty = str=> typeof str === 'undefined' || str === null || str === "";
 
 /**
  * @description: 文本空过滤

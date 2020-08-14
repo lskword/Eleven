@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 // env 文件 判断打包环境指定对应的服务器id
-const envfile = process.env.NODE_ENV === 'prod' ? '../.env.prod' : '../.env.cust';
+const envfile = process.env.NODE_ENV === 'prod' ? '../.env.prod' : '../.env.test';
 // env环境变量的路径
 const envPath = path.resolve(__dirname, envfile);
 // env对象
@@ -45,15 +45,16 @@ function parse(src) {
 const SERVER_LIST = [
   {// 暂时没有用，留着备用
     id: 0,
-    name: 'A-测试环境',
+    name: '在线咨询公共版',
     domain: '',// 域名
-    host: '120.24.61.318',// ip
-    assetsRoot: './dist',
+    host: '192.168.1.99',// ip
+    assetsRoot: './CustTerminal',
     port: 22,// 端口
     username: 'root', // 登录服务器的账号
     password: 'root',// 登录服务器的账号
-    path: '/home/web/tools/'// 发布至静态服务器的项目路径
+    path: '/home/web/tools/yaoyiyao/CustTerminal/'
   },
+  
   {// 此命令（发布Vue3.0测试版）
     id: 1,
     name: "Vue3.0测试版",

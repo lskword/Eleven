@@ -1,72 +1,47 @@
 <template>
   <!-- <van-progress color="BASE_COLOR_PRIMARY" :show-pivot='false' :percentage="percentage" v-if="percentage != 100" /> -->
   <div class="box">
-    <Header
-      :class="['animated fadeIn', $route.path == '/index'? 'header': 'two ', scrollTop >= 100 ? 'olive fadeInDown' : '']" />
     <keep-alive>
-      <router-view class="content" v-if="$route.meta.keepAlive"></router-view>
+      <router-view :class="['content', isFooterShow?'': 'notApp']" v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
-    <router-view class="content" />
-    <Footer />
+    <router-view :class="['content', isFooterShow?'': 'notApp']" v-if="!$route.meta.keepAlive"/>
+    <Footer v-if="!isFooterShow"/>
   </div>
 </template>
 
 <script>
-  import Header from '@/components/Header'
+  // import Header from '@/components/Header'
   import Footer from '@/components/Footer'
+  import { getAppType } from "@/utils/auth";
   export default {
     data() {
-      return {
-        percentage: 100,
-        scrollTop: 0
-      }
+      return {}
     },
     components: {
-      Header,
+      // Header,
       Footer
     },
-    methods: {
-      handleScroll() {
-        this.scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        console.log(this.scrollTop);
+    computed: {
+       // 只有首页个人中心展示底部栏
+      isFooterShow() {
+        let whlieName = ['/index', '/userInfo'];
+        let path = this.$route.path;
+        return getAppType() || !whlieName.includes(path);
       }
     },
-    mounted() {
-      window.addEventListener('scroll', this.handleScroll)
+    methods: {
+     
+
     }
   }
 </script>
 
-<style lang="scss" scoped>
-  .box {
-    position: relative;
+<style lang="less" scoped>
+.content {
+  min-height: 100vh;
+}
+.content.notApp {
+  min-height: calc(100vh - 50px);
+}
 
-    .header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      padding: .32rem 0 .32rem;
-      z-index: 9;
-    }
-
-    .two {
-      background: #fff;
-      width: 100vw;
-      padding: .32rem 0 .32rem;
-      z-index: 9;
-    }
-
-    .olive {
-      background: #fff;
-      padding: .32rem 0 .1rem;
-      margin: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      z-index: 99999;
-    }
-
-  }
 </style>

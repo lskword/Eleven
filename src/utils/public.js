@@ -1,16 +1,10 @@
-import {
-  themeColor
-} from '@/utils/globalCss'
+/* eslint-disable */
 import { getToken,getUnitId,getOpenId } from "@/utils/auth";
 export default {
   install(Vue, options) {
     // 头部返回箭头按钮__地址控制
     Vue.prototype.BackPath = function (val) {
       this.$store.dispatch('setBackToPath', val)
-    }
-    // 主题色切换公用功能方法
-    Vue.prototype.themeChange = function (option) {
-      themeColor(option)
     }
     // 日期格式化
     Vue.prototype.formatDate = function (date, fmt, text) {
@@ -64,11 +58,11 @@ export default {
       }
       //预计结束日期=开始日期+期限
       if (oldDate.getDate() == newDate.getDate()) { //月末,getDaysInMonth()获取该月的最后一天
-        var strDate = yy1 + "-" + mm1 + "-" + dd1;
+        strDate = yy1 + "-" + mm1 + "-" + dd1;
       }else if (newDate.getMonth().toString().length==2) {
-        var strDate = yy1 + "-" +  newDate.getMonth() + "-" + new Date(yy1, newDate.getMonth(), 0).getDate();
+        strDate = yy1 + "-" +  newDate.getMonth() + "-" + new Date(yy1, newDate.getMonth(), 0).getDate();
       } else {
-        var strDate = yy1 + "-" + "0" + newDate.getMonth() + "-" + new Date(yy1, newDate.getMonth(), 0).getDate();
+        strDate = yy1 + "-" + "0" + newDate.getMonth() + "-" + new Date(yy1, newDate.getMonth(), 0).getDate();
       }
       //    console.log(strDate);
       return strDate
@@ -87,6 +81,7 @@ export default {
       }
       document.getElementById(id).scrollIntoView(isTopOrBottom);
     }
+    
     // 名字从第二位开始取*号 尾数不取
     Vue.prototype.protectionName = function (name) {
       return [...name]
@@ -94,107 +89,6 @@ export default {
           return Math.floor(arr.length / 2) === index ? '*' : item;
         })
         .join('');
-    }
-    // public method for encoding
-    Vue.prototype.base64Encode = function (input) {
-      // private property
-      var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-      var output = "";
-      var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-      var i = 0;
-      // private method for UTF-8 encoding
-      var _utf8_encode = function (string) {
-        string = string.replace(/\r\n/g, "\n");
-        var utftext = "";
-        for (var n = 0; n < string.length; n++) {
-          var c = string.charCodeAt(n);
-          if (c < 128) {
-            utftext += String.fromCharCode(c);
-          } else if ((c > 127) && (c < 2048)) {
-            utftext += String.fromCharCode((c >> 6) | 192);
-            utftext += String.fromCharCode((c & 63) | 128);
-          } else {
-            utftext += String.fromCharCode((c >> 12) | 224);
-            utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-            utftext += String.fromCharCode((c & 63) | 128);
-          }
-
-        }
-        return utftext;
-      }
-      input = _utf8_encode(input);
-
-      while (i < input.length) {
-        chr1 = input.charCodeAt(i++);
-        chr2 = input.charCodeAt(i++);
-        chr3 = input.charCodeAt(i++);
-        enc1 = chr1 >> 2;
-        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-        enc4 = chr3 & 63;
-        if (isNaN(chr2)) {
-          enc3 = enc4 = 64;
-        } else if (isNaN(chr3)) {
-          enc4 = 64;
-        }
-        output = output +
-          _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
-          _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
-      }
-      return output;
-    }
-
-    // public method for decoding
-    Vue.prototype.base64Decode = function (input) {
-      var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-      var output = "";
-      var chr1, chr2, chr3;
-      var enc1, enc2, enc3, enc4;
-      var i = 0;
-      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-      while (i < input.length) {
-        enc1 = _keyStr.indexOf(input.charAt(i++));
-        enc2 = _keyStr.indexOf(input.charAt(i++));
-        enc3 = _keyStr.indexOf(input.charAt(i++));
-        enc4 = _keyStr.indexOf(input.charAt(i++));
-        chr1 = (enc1 << 2) | (enc2 >> 4);
-        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-        chr3 = ((enc3 & 3) << 6) | enc4;
-        output = output + String.fromCharCode(chr1);
-        if (enc3 != 64) {
-          output = output + String.fromCharCode(chr2);
-        }
-        if (enc4 != 64) {
-          output = output + String.fromCharCode(chr3);
-        }
-      }
-      // private method for UTF-8 decoding
-      var _utf8_decode = function (utftext) {
-        var string = "";
-        var i = 0;
-        var c = 0,
-          c2 = 0,
-          c3 = 0;
-        while (i < utftext.length) {
-          c = utftext.charCodeAt(i);
-          if (c < 128) {
-            string += String.fromCharCode(c);
-            i++;
-          } else if ((c > 191) && (c < 224)) {
-            c2 = utftext.charCodeAt(i + 1);
-            string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-            i += 2;
-          } else {
-            c2 = utftext.charCodeAt(i + 1);
-            c3 = utftext.charCodeAt(i + 2);
-            string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-            i += 3;
-          }
-        }
-        return string;
-      }
-      output = _utf8_decode(output);
-      return output;
     }
 
     // 获取地址参数
@@ -210,8 +104,7 @@ export default {
       }
       return theRequest;
     }
-    // 
-    // 
+
     /**
      * 微信公众号支付
      */
@@ -219,8 +112,6 @@ export default {
        function onBridgeReady(){
          WeixinJSBridge.invoke('getBrandWCPayRequest', data,
           function(res){
-            // alert('我是拦截器')
-            // alert(JSON.stringify(res))
             if(res.err_msg == "get_brand_wcpay_request:ok" ){
               // 使用以上方式判断前端返回,微信团队郑重提示：
               // fn()
@@ -246,7 +137,9 @@ export default {
     Vue.prototype.isWeixin = function() {
       const u = navigator.userAgent.toLowerCase();
       if (u.match(/MicroMessenger/i) == "micromessenger") {
-        return true
+        return true;
+      }else{
+        return false;
       }
     }
 
@@ -259,12 +152,12 @@ export default {
       return new Promise((resolve, reject) =>{
         var clipboard = new ClipboardJS(ele , {"text": ()=> text});
         clipboard.on('success', function(e) {
-            console.log(e);
+            // console.log(e);
             resolve(e)
         });
       
         clipboard.on('error', function(e) {
-            console.log(e);
+            // console.log(e);
             reject(e)
         });
       })
@@ -309,53 +202,12 @@ export default {
         });
       }
     });
-   },
-
-   /**
-     * 跳转小程序
-     * ele 目标元素点击时间绑定
-     * text 需要复制的文本
-     */
-   Vue.prototype.miniProgramNavigateTo = function( url,type ){
-    wx.miniProgram[type?type:"navigateTo"]({
-      url:url,
-      success: function(){
-        console.log('success')
-      },
-      fail: function(){
-       console.log('跳转回小程序的页面fail');
-      },  
-    });
    }
-
-  Vue.prototype.DayJs = require('dayjs')
 
   }
 
 }
 
-Vue.directive('drag', {
-  inserted: function (el) {
-    el.onmousedown = function (ev) {
-      var disX = ev.clientX - el.offsetLeft;
-      var disY = ev.clientY - el.offsetTop;
-      document.onmousemove = function (ev) {
-        var l = ev.clientX - disX;
-        var t = ev.clientY - disY;
-        el.style.left = l + 'px';
-        el.style.top = t + 'px';
-        console.log(ev);
-
-      };
-      document.onmouseup = function () {
-        document.onmousemove = null;
-        document.onmouseup = null;
-
-      };
-    };
-  }
-
-})
 
 /**
  * 判断是否为微信小程序

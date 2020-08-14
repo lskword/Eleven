@@ -1,20 +1,14 @@
-(function (doc, win) {
-  var docEl = doc.documentElement,
-    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
-    recalc = function () {
-      var clientWidth = docEl.clientWidth;
-      if (!clientWidth) return;
-      var size = 1920
-      if(clientWidth>=size){
-        docEl.style.fontSize = '100px';
-      }else{
-        docEl.style.fontSize = 100 * (clientWidth / size) + 'px';
-      }
-      // console.log(docEl.style.fontSize);
-    };
-    
-    
-  if (!doc.addEventListener) return;
-  win.addEventListener(resizeEvt, recalc, false);
-  doc.addEventListener('DOMContentLoaded', recalc, false);
-})(document, window);
+((window, document) => {
+  function fnResize() {
+    var deviceWidth = document.documentElement.clientWidth || window.innerWidth;
+    if (deviceWidth >= 750) {
+      deviceWidth = 750;
+    }
+    if (deviceWidth <= 320) {
+      deviceWidth = 320;
+    }
+    document.documentElement.style.fontSize = (deviceWidth / 7.5) + 'px';
+  }
+  window.onresize = fnResize;
+  fnResize();
+})(window, document)

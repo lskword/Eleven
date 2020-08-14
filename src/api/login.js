@@ -1,6 +1,5 @@
-import request from '@/utils/request';
 
-
+/* eslint-disable */
 /**
  * 用户登录
  * 1.请求参数
@@ -11,8 +10,8 @@ import request from '@/utils/request';
  * @returns
  */
 export function loginApi(data) {
-    return  request({
-        url: '/api/login/login',
+    return  BASE_REQUEST_API({
+        url: '/api/login/loginTel',
         method: 'post',
         data
     });
@@ -27,7 +26,7 @@ export function loginApi(data) {
  * @returns
  */
 export function validateCodeApi(data) {
-    return request({
+    return BASE_REQUEST_API({
         url: '/api/login/validateCode',
         method: 'post',
         data
